@@ -86,7 +86,7 @@ st.markdown(f"""
             <p class="title-text">🏰 Haunted House Dashboard</p>
         </div>
         <div class="countdown-box" style="flex: 1;">
-            <p class="header-subtext">COMPETITION</p>
+            <p class="header-subtext">Days until kick-off</p>
             <p style="font-size: 1.5rem; font-weight: bold; color: #FF4B4B; margin:0;">{max(0, days_left)} DAYS LEFT</p>
         </div>
     </div>
