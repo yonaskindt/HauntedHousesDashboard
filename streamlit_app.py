@@ -54,26 +54,49 @@ st.markdown("""
     
     header {visibility: hidden;}
     footer {visibility: hidden;}
+
+    /* Header Container - Forces horizontal alignment */
+    .header-box { 
+        display: flex; 
+        flex-direction: row;
+        justify-content: space-between; 
+        align-items: center; 
+        padding: 15px 25px; 
+        background: rgba(255,255,255,0.05); 
+        border-radius: 15px; 
+        margin-bottom: 20px; 
+        border: 1px solid rgba(255,75,75,0.3);
+        width: 100%;
+    }
+    .header-item { flex: 1; }
+    .header-center { flex: 2; text-align: center; }
+    .header-right { flex: 1; text-align: right; border-left: 2px solid #FF4B4B; padding-left: 20px; }
     </style>
 """, unsafe_allow_html=True)
 
-# --- NEW TOP HEADER SECTION ---
+# --- TOP CENTER HEADER ---
 days_left = (COMP_DATE - datetime.now()).days
+
 st.markdown(f"""
     <div class="header-box">
-        <div style="flex: 1;">
-            <p class="header-subtext">{datetime.now().strftime("%A")}</p>
-            <p style="font-weight: bold; margin:0;">{datetime.now().strftime("%d %B %Y")}</p>
+        <div class="header-item">
+            <p class="header-subtext" style="margin:0;">{datetime.now().strftime("%A")}</p>
+            <p style="font-weight: bold; margin:0; font-size: 1.2rem;">{datetime.now().strftime("%d %B %Y")}</p>
         </div>
-        <div style="flex: 2; text-align: center;">
-            <p class="title-text">🏰 Haunted House Dashboard</p>
+        
+        <div class="header-center">
+            <p class="title-text" style="margin:0;">🏰 Haunted House Dashboard</p>
         </div>
-        <div class="countdown-box" style="flex: 1;">
-            <p class="header-subtext">COMPETITION</p>
-            <p style="font-size: 1.5rem; font-weight: bold; color: #FF4B4B; margin:0;">{max(0, days_left)} DAYS LEFT</p>
+        
+        <div class="header-right">
+            <p class="header-subtext" style="margin:0;">COMPETITION</p>
+            <p style="font-size: 1.6rem; font-weight: bold; color: #FF4B4B; margin:0;">
+                {max(0, days_left)} DAYS LEFT
+            </p>
         </div>
     </div>
 """, unsafe_allow_html=True)
+
 now = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
 
 # 1. QUOTE
