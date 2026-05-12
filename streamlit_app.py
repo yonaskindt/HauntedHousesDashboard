@@ -72,7 +72,34 @@ st.markdown("""
     .header-center { flex: 2; text-align: center; }
     .header-right { flex: 1; text-align: right; border-left: 2px solid #FF4B4B; padding-left: 20px; }
 
-    
+    /* Internal scrolling area - Fixed height prevents pushing content down */
+    .scroll-area { 
+        height: 60vh; 
+        overflow: hidden; 
+        position: relative;
+        border: 1px solid rgba(255,255,255,0.05); /* Optional: visual boundary */
+        background: rgba(0,0,0,0.1);
+        border-radius: 10px;
+    }
+
+    /* The animation container */
+    .auto-scroll-content {
+        position: absolute;
+        width: 100%;
+        top: 0;
+        left: 0;
+        animation: scroll-tasks 40s linear infinite;
+    }
+
+    /* Pause on hover */
+    .auto-scroll-content:hover {
+        animation-play-state: paused;
+    }
+
+    @keyframes scroll-tasks {
+        0% { top: 0; }
+        100% { top: -100%; } /* Adjust this if the loop isn't seamless */
+    }
     </style>
 """, unsafe_allow_html=True)
 
