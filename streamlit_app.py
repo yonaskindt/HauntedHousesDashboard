@@ -74,25 +74,20 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- TOP CENTER HEADER ---
+# --- NEW TOP HEADER SECTION ---
 days_left = (COMP_DATE - datetime.now()).days
-
 st.markdown(f"""
     <div class="header-box">
-        <div class="header-item">
-            <p class="header-subtext" style="margin:0;">{datetime.now().strftime("%A")}</p>
-            <p style="font-weight: bold; margin:0; font-size: 1.2rem;">{datetime.now().strftime("%d %B %Y")}</p>
+        <div style="flex: 1;">
+            <p class="header-subtext">{datetime.now().strftime("%A")}</p>
+            <p style="font-weight: bold; margin:0;">{datetime.now().strftime("%d %B %Y")}</p>
         </div>
-        
-        <div class="header-center">
-            <p class="title-text" style="margin:0;">🏰 Haunted House Dashboard</p>
+        <div style="flex: 2; text-align: center;">
+            <p class="title-text">🏰 Haunted House Dashboard</p>
         </div>
-        
-        <div class="header-right">
-            <p class="header-subtext" style="margin:0;">COMPETITION</p>
-            <p style="font-size: 1.6rem; font-weight: bold; color: #FF4B4B; margin:0;">
-                {max(0, days_left)} DAYS LEFT
-            </p>
+        <div class="countdown-box" style="flex: 1;">
+            <p class="header-subtext">COMPETITION</p>
+            <p style="font-size: 1.5rem; font-weight: bold; color: #FF4B4B; margin:0;">{max(0, days_left)} DAYS LEFT</p>
         </div>
     </div>
 """, unsafe_allow_html=True)
