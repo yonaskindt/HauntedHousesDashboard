@@ -3,7 +3,9 @@ import pandas as pd
 import gspread
 from google.oauth2.service_account import Credentials
 from datetime import datetime, timedelta
+from streamlit_autorefresh import st_autorefresh
 
+count = st_autorefresh(interval=300000, key="dashboard_refresh")
 # --- PAGE CONFIG ---
 st.set_page_config(page_title="Haunted House Dashboard", layout="wide", initial_sidebar_state="collapsed")
 
@@ -55,10 +57,23 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- TOP CENTER HEADER ---
-st.markdown('<p class="title-text">🏰 Haunted House Dashboard</p>', unsafe_allow_html=True)
-st.markdown(f'<p class="date-text">{datetime.now().strftime("%A, %d %B %Y")}</p>', unsafe_allow_html=True)
-
+# --- NEW TOP HEADER SECTION ---
+days_left = (COMP_DATE - datetime.now()).days
+st.markdown(f"""
+    <div class="header-box">
+        <div style="flex: 1;">
+            <p class="header-subtext">{datetime.now().strftime("%A")}</p>
+            <p style="font-weight: bold; margin:0;">{datetime.now().strftime("%d %B %Y")}</p>
+        </div>
+        <div style="flex: 2; text-align: center;">
+            <p class="title-text">🏰 Haunted House Dashboard</p>
+        </div>
+        <div class="countdown-box" style="flex: 1;">
+            <p class="header-subtext">COMPETITION</p>
+            <p style="font-size: 1.5rem; font-weight: bold; color: #FF4B4B; margin:0;">{max(0, days_left)} DAYS LEFT</p>
+        </div>
+    </div>
+""", unsafe_allow_html=True)
 now = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
 
 # 1. QUOTE
@@ -145,12 +160,3 @@ with col_right:
     
     st.markdown('</div>', unsafe_allow_html=True)
 
-# 3. FOOTER
-st.write("---")
-f1, f2 = st.columns([2, 1])
-with f1:
-    days_left = (COMP_DATE - datetime.now()).days
-    st.write(f"⏳ **Days until kick-off:** {max(0, days_left)} Days")
-with f2:
-    if st.button("🔄 Sync System"):
-        st.rerun()
