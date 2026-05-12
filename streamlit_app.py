@@ -46,36 +46,38 @@ b_df = get_google_data(SOCIAL_SHEET_ID, "Birthdays")
 
 if not b_df.empty:
     found_bday = False
-    now = datetime.now()
+    # Get today's date (ignoring exact time for easier comparison)
+    now = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
     
     for _, row in b_df.iterrows():
         try:
-            # dayfirst=True tells Python to expect DD/MM/YYYY
+            # dayfirst=True ensures 12-5 is read as May 12th
             bdate = pd.to_datetime(row['date'], dayfirst=True)
             
-            # Adjust the year to 'this year' to check if it's coming up
+            # Adjust to current year to check the distance from today
             bdate_this_year = bdate.replace(year=now.year)
             
-            # If the birthday already happened this year, check against next year 
-            # (useful for late December/early January dates)
+            # If the birthday is in the future but we're at the end of the year, 
+            # this logic handles the wrap-around to January
             if bdate_this_year < now - timedelta(days=1):
                 bdate_this_year = bdate_this_year.replace(year=now.year + 1)
             
-            # Calculate days until the birthday
             days_until = (bdate_this_year - now).days
             
-            # ONLY SHOW if it's in the next 7 days (or today)
+            # SHOW if it's today or in the next 7 days
             if 0 <= days_until <= 7:
+                # Add a special label if the birthday is TODAY
+                label = "✨ TODAY!" if days_until == 0 else f"in {days_until} days"
+                
                 st.markdown(f"""
-                <div class="bday-card">
-                    🎈 <b>{row['name']}</b><br>
-                    <span style="font-size: 0.8em;">{bdate_this_year.strftime('%d %B')}</span>
+                <div class="bday-card" style="border-left: 5px solid {'#FFD700' if days_until == 0 else '#FF69B4'};">
+                    <b>{row['name']}</b> — {label}<br>
+                    <span style="font-size: 0.85em; color: #BDC3C7;">{bdate_this_year.strftime('%d %B')}</span>
                 </div>
                 """, unsafe_allow_html=True)
                 found_bday = True
-        except Exception as e:
-            # This skips rows that aren't valid dates
+        except:
             continue
             
     if not found_bday:
-        st.write("No birthdays in the next 7 days.")
+        st.info("No birthdays this week. More pizza for the rest of us!")
