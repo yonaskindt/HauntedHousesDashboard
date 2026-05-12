@@ -75,27 +75,37 @@ with col_left:
     
     tasks_df = get_google_data(SHEET_ID, "Active Tasks")
     if not tasks_df.empty:
+        # Filter for non-completed tasks
         active_tasks = tasks_df[~tasks_df['status'].str.lower().isin(['done', 'completed'])]
         
         for _, row in active_tasks.iterrows():
-            # Get Prio and Status
-            prio = str(row.get('priority', '')).lower()
+            # 1. Get Priority (from "Priority level" column)
+            prio = str(row.get('priority level', '')).lower()
             prio_class = "prio-high" if prio == "high" else "prio-medium" if prio == "medium" else ""
+            
+            # 2. Get Status
             status_val = row.get('status', 'Pending')
             
-            # Identify correct column for Person
+            # 3. Get Assigned Person
             person = row.get('assigned to') or row.get('lead') or "Open"
+            
+            # 4. Get Description (from "Task" column)
+            description = row.get('task', 'No description provided.')
             
             st.markdown(f"""
                 <div class="task-card {prio_class}">
                     <div style="display: flex; justify-content: space-between; align-items: start;">
                         <div>
-                            <span style="font-weight: bold; font-size: 1.1em;">{row.get('task', 'Unnamed Task')}</span>
-                            <div style="margin-top:4px;"><span class="status-pill">{status_val}</span> • <span style="font-size:0.8em; color:#FFA500;">{prio.upper()} PRIORITY</span></div>
+                            <span style="font-weight: bold; font-size: 1.1em;">{description}</span>
+                            <div style="margin-top:4px;">
+                                <span class="status-pill">{status_val}</span> • 
+                                <span style="font-size:0.8em; color:#FFA500;">{prio.upper()}</span>
+                            </div>
                         </div>
-                        <span style="background: #4F8BF9; color: white; padding: 2px 12px; border-radius: 20px; font-size: 0.8em;">{person}</span>
+                        <span style="background: #4F8BF9; color: white; padding: 2px 12px; border-radius: 20px; font-size: 0.8em;">
+                            {person}
+                        </span>
                     </div>
-                    <div class="desc-text">{row.get('description', 'No description provided.')}</div>
                 </div>
             """, unsafe_allow_html=True)
     else:
