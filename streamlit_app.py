@@ -27,7 +27,7 @@ def get_google_data(sheet_id, tab_name):
 
 # --- CONFIG ---
 # Replace with your actual Sheet ID from the URL
-SOCIAL_SHEET_ID = "YOUR_SOCIAL_SHEET_ID_HERE" 
+SOCIAL_SHEET_ID = "1FuzDffAF4O1zinFsXgyHdvt9iSL91vutrosv_v727_U" 
 # Replace with your actual competition date
 COMP_DATE = datetime(2026, 3, 15) 
 
