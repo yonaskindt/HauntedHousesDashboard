@@ -72,7 +72,36 @@ st.markdown("""
     .header-center { flex: 2; text-align: center; }
     .header-right { flex: 1; text-align: right; border-left: 2px solid #FF4B4B; padding-left: 20px; }
 
-    
+            //from here
+    /* Internal scrolling area - Fixed height prevents pushing content down */
+    .scroll-area { 
+        height: 60vh; 
+        overflow: hidden; 
+        position: relative;
+        border: 1px solid rgba(255,255,255,0.05); /* Optional: visual boundary */
+        background: rgba(0,0,0,0.1);
+        border-radius: 10px;
+    }
+
+    /* The animation container */
+    .auto-scroll-content {
+        position: absolute;
+        width: 100%;
+        top: 0;
+        left: 0;
+        animation: scroll-tasks 40s linear infinite;
+    }
+
+    /* Pause on hover */
+    .auto-scroll-content:hover {
+        animation-play-state: paused;
+    }
+
+    @keyframes scroll-tasks {
+        0% { top: 0; }
+        100% { top: -100%; } /* Adjust this if the loop isn't seamless */
+    }
+            //till here
     </style>
 """, unsafe_allow_html=True)
 
@@ -104,55 +133,47 @@ if not quotes_df.empty:
 
 col_left, col_right = st.columns([1.8, 1])
 
+col_left, col_right = st.columns([1.8, 1])
+
 with col_left:
     st.subheader("📋 Active Tasks")
-    st.markdown('<div class="scroll-area">', unsafe_allow_html=True)
     
     tasks_df = get_google_data(SHEET_ID, "Active Tasks")
     if not tasks_df.empty:
-        # Filter for non-completed tasks
-        active_tasks = tasks_df[~tasks_df['status'].str.lower().isin(['done', 'completed', 'finished'])]
+        active_tasks = tasks_df[~tasks_df['status'].str.lower().isin(['done', 'completed'])]
         
-        for _, row in active_tasks.iterrows():
-            # 1. Get Priority (mapping "Priority level" column)
+        # Open the fixed-height container
+        st.markdown('<div class="scroll-area"><div class="auto-scroll-content">', unsafe_allow_html=True)
+        
+        def render_task(row):
             prio = str(row.get('priority level', '')).lower()
             prio_class = "prio-high" if prio == "high" else "prio-medium" if prio == "medium" else ""
-            
-            # 2. Get Status
-            status_val = row.get('status', 'Pending')
-            
-            # 3. Get Assigned Person
             person = row.get('assigned to') or row.get('lead') or "Open"
+            task_desc = row.get('task', 'No description')
+            remarks_text = str(row.get('remarks', '')).strip() or "No remarks"
             
-            # 4. Get Task (Description)
-            task_desc = row.get('task', 'No description provided.')
-            
-            # 5. Get Remarks with fallback text
-            raw_remarks = str(row.get('remarks', '')).strip()
-            remarks_text = raw_remarks if raw_remarks else "No remarks"
-            
-            st.markdown(f"""
+            return f"""
                 <div class="task-card {prio_class}">
                     <div style="display: flex; justify-content: space-between; align-items: start;">
                         <div style="width: 80%;">
-                            <span style="font-weight: bold; font-size: 1.1em; color: #FFFFFF;">{task_desc}</span>
-                            <div style="color: #BDC3C7; font-size: 0.9em; margin-top: 4px; font-style: italic;">
-                                ↳ {remarks_text}
-                            </div>
+                            <span style="font-weight: bold; font-size: 1.1em;">{task_desc}</span>
+                            <div style="color: #BDC3C7; font-size: 0.9em; margin-top: 4px; font-style: italic;">↳ {remarks_text}</div>
                             <div style="margin-top:8px;">
-                                <span class="status-pill">{status_val}</span> • 
+                                <span class="status-pill">{row.get('status', 'Pending')}</span> • 
                                 <span style="font-size:0.75em; color:#FFA500; font-weight: bold;">{prio.upper()}</span>
                             </div>
                         </div>
-                        <span style="background: #4F8BF9; color: white; padding: 2px 12px; border-radius: 20px; font-size: 0.8em; white-space: nowrap;">
-                            {person}
-                        </span>
+                        <span style="background: #4F8BF9; color: white; padding: 2px 12px; border-radius: 20px; font-size: 0.8em; white-space: nowrap;">{person}</span>
                     </div>
                 </div>
-            """, unsafe_allow_html=True)
-    else:
-        st.write("👻 No ghosts... and no tasks.")
-    st.markdown('</div>', unsafe_allow_html=True)
+            """
+
+        task_html = "".join([render_task(row) for _, row in active_tasks.iterrows()])
+        
+        # Use the list twice for seamless looping
+        st.markdown(task_html + task_html, unsafe_allow_html=True)
+        
+        st.markdown('</div></div>', unsafe_allow_html=True)
 
 with col_right:
     st.subheader("📢 News")
