@@ -71,6 +71,30 @@ st.markdown("""
     .header-item { flex: 1; }
     .header-center { flex: 2; text-align: center; }
     .header-right { flex: 1; text-align: right; border-left: 2px solid #FF4B4B; padding-left: 20px; }
+
+    /* Internal scrolling area */
+    .scroll-area { 
+        height: 60vh; 
+        overflow: hidden; /* Hide the scrollbar entirely */
+        position: relative;
+    }
+
+    /* The animation container */
+    .auto-scroll-content {
+        position: absolute;
+        width: 100%;
+        animation: scroll-tasks 40s linear infinite; /* Adjust 40s to change speed */
+    }
+
+    /* Pause scrolling when someone hovers with a mouse */
+    .auto-scroll-content:hover {
+        animation-play-state: paused;
+    }
+
+    @keyframes scroll-tasks {
+        0% { transform: translateY(0); }
+        100% { transform: translateY(-50%); } /* Scrolls halfway through the doubled list */
+    }
     </style>
 """, unsafe_allow_html=True)
 
