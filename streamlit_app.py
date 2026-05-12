@@ -42,10 +42,40 @@ with col1:
 
 with col2:
     st.header("🎂 Birthdays")
-    b_df = get_google_data(SOCIAL_SHEET_ID, "Birthdays")
+b_df = get_google_data(SOCIAL_SHEET_ID, "Birthdays")
+
+if not b_df.empty:
+    found_bday = False
+    now = datetime.now()
     
     for _, row in b_df.iterrows():
-        # .get() prevents a crash if the column name is slightly off
-        name = row.get('name', row.get('Name', 'Unknown'))
-        date = row.get('date', row.get('Date', 'No Date'))
-        st.write(f"🎈 {name} - {date}")
+        try:
+            # dayfirst=True tells Python to expect DD/MM/YYYY
+            bdate = pd.to_datetime(row['date'], dayfirst=True)
+            
+            # Adjust the year to 'this year' to check if it's coming up
+            bdate_this_year = bdate.replace(year=now.year)
+            
+            # If the birthday already happened this year, check against next year 
+            # (useful for late December/early January dates)
+            if bdate_this_year < now - timedelta(days=1):
+                bdate_this_year = bdate_this_year.replace(year=now.year + 1)
+            
+            # Calculate days until the birthday
+            days_until = (bdate_this_year - now).days
+            
+            # ONLY SHOW if it's in the next 7 days (or today)
+            if 0 <= days_until <= 7:
+                st.markdown(f"""
+                <div class="bday-card">
+                    🎈 <b>{row['name']}</b><br>
+                    <span style="font-size: 0.8em;">{bdate_this_year.strftime('%d %B')}</span>
+                </div>
+                """, unsafe_allow_html=True)
+                found_bday = True
+        except Exception as e:
+            # This skips rows that aren't valid dates
+            continue
+            
+    if not found_bday:
+        st.write("No birthdays in the next 7 days.")
