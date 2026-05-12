@@ -89,16 +89,21 @@ with col_left:
             # 3. Get Assigned Person
             person = row.get('assigned to') or row.get('lead') or "Open"
             
-            # 4. Get Task (Description) and Remarks
+            # 4. Get Task (Description)
             task_desc = row.get('task', 'No description provided.')
-            remarks = row.get('remarks', '') # Checks for a column titled "Remarks"
+            
+            # 5. Get Remarks with fallback text
+            raw_remarks = str(row.get('remarks', '')).strip()
+            remarks_text = raw_remarks if raw_remarks else "No remarks"
             
             st.markdown(f"""
                 <div class="task-card {prio_class}">
                     <div style="display: flex; justify-content: space-between; align-items: start;">
                         <div style="width: 80%;">
                             <span style="font-weight: bold; font-size: 1.1em; color: #FFFFFF;">{task_desc}</span>
-                            {f'<div style="color: #BDC3C7; font-size: 0.9em; margin-top: 4px; font-style: italic;">↳ {remarks}</div>' if remarks else ''}
+                            <div style="color: #BDC3C7; font-size: 0.9em; margin-top: 4px; font-style: italic;">
+                                ↳ {remarks_text}
+                            </div>
                             <div style="margin-top:8px;">
                                 <span class="status-pill">{status_val}</span> • 
                                 <span style="font-size:0.75em; color:#FFA500; font-weight: bold;">{prio.upper()}</span>
