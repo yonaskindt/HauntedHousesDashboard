@@ -41,7 +41,9 @@ with col1:
         st.info(f"**{row['headline']}**\n\n{row['content']}")
 
 with col2:
- 
+    st.header("🎂 Birthdays")
+    b_df = get_google_data(SOCIAL_SHEET_ID, "Birthdays")
+    
     for _, row in b_df.iterrows():
         # .get() prevents a crash if the column name is slightly off
         name = row.get('name', row.get('Name', 'Unknown'))
