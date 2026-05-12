@@ -7,16 +7,16 @@ from datetime import datetime, timedelta
 # --- SECURE DATA FETCH ---
 def get_google_data(sheet_id, tab_name):
     try:
-        # Pulls the "badge" from Streamlit's secret vault
         creds_info = st.secrets["gcp_service_account"]
         scope = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
         creds = Credentials.from_service_account_info(creds_info, scopes=scope)
         client = gspread.authorize(creds)
         
-        sheet = client.open_by_key(sheet_id)
-        df = pd.DataFrame(sheet.worksheet(tab_name).get_all_records())
-        df.columns = [c.strip().lower() for c in df.columns]
-        return df
+        # This is where the 404 happens if sheet_id is wrong
+        sheet = client.open_by_key(sheet_id) 
+        
+        worksheet = sheet.worksheet(tab_name)
+        return pd.DataFrame(worksheet.get_all_records())
     except Exception as e:
         st.error(f"Error: {e}")
         return pd.DataFrame()
