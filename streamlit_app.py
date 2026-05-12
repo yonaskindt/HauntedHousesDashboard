@@ -5,7 +5,7 @@ from google.oauth2.service_account import Credentials
 from datetime import datetime, timedelta
 
 # --- PAGE CONFIG ---
-st.set_page_config(page_title="Team Hub", layout="wide")
+st.set_page_config(page_title="Haunted Hub", layout="wide")
 
 # --- SECURE DATA FETCH ---
 def get_google_data(sheet_id, tab_name):
@@ -42,7 +42,7 @@ st.markdown("""
 
 # --- APP START ---
 now = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
-st.title("🛠️ Team Command Center")
+st.title("🛠️ Haunted House Hub")
 st.subheader(datetime.now().strftime("%A, %d %B %Y"))
 
 # 1. QUOTE SECTION
