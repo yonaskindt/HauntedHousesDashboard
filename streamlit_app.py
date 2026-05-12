@@ -29,7 +29,7 @@ def get_google_data(sheet_id, tab_name):
 # Replace with your actual Sheet ID from the URL
 SOCIAL_SHEET_ID = "1FuzDffAF4O1zinFsXgyHdvt9iSL91vutrosv_v727_U" 
 # Replace with your actual competition date
-COMP_DATE = datetime(2026, 3, 15) 
+COMP_DATE = datetime(2027, 1, 10) 
 
 # --- STYLING ---
 st.markdown("""
@@ -118,7 +118,7 @@ with col_right:
     # 4. COUNTDOWN
     st.header("⏳ Countdown")
     days_left = (COMP_DATE - datetime.now()).days
-    st.metric("Days to Competition", f"{max(0, days_left)}")
+    st.metric("Days to Kick-Off", f"{max(0, days_left)}")
 
 # 5. REFRESH BUTTON
 if st.button("🔄 Sync with Google Sheets"):
