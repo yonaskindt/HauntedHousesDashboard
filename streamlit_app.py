@@ -24,7 +24,7 @@ def get_google_data(sheet_id, tab_name):
 
 # --- CONFIG ---
 SHEET_ID = "1FuzDffAF4O1zinFsXgyHdvt9iSL91vutrosv_v727_U" 
-COMP_DATE = datetime(2026, 3, 15) 
+COMP_DATE = datetime(2027, 1, 10) 
 
 # --- STYLING ---
 st.markdown("""
@@ -150,7 +150,7 @@ st.write("---")
 f1, f2 = st.columns([2, 1])
 with f1:
     days_left = (COMP_DATE - datetime.now()).days
-    st.write(f"⏳ **Competition Countdown:** {max(0, days_left)} Days")
+    st.write(f"⏳ **Days until kick-off:** {max(0, days_left)} Days")
 with f2:
     if st.button("🔄 Sync System"):
         st.rerun()
