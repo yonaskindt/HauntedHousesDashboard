@@ -76,10 +76,10 @@ with col_left:
     tasks_df = get_google_data(SHEET_ID, "Active Tasks")
     if not tasks_df.empty:
         # Filter for non-completed tasks
-        active_tasks = tasks_df[~tasks_df['status'].str.lower().isin(['done', 'completed'])]
+        active_tasks = tasks_df[~tasks_df['status'].str.lower().isin(['done', 'completed', 'finished'])]
         
         for _, row in active_tasks.iterrows():
-            # 1. Get Priority (from "Priority level" column)
+            # 1. Get Priority (mapping "Priority level" column)
             prio = str(row.get('priority level', '')).lower()
             prio_class = "prio-high" if prio == "high" else "prio-medium" if prio == "medium" else ""
             
@@ -89,20 +89,22 @@ with col_left:
             # 3. Get Assigned Person
             person = row.get('assigned to') or row.get('lead') or "Open"
             
-            # 4. Get Description (from "Task" column)
-            description = row.get('task', 'No description provided.')
+            # 4. Get Task (Description) and Remarks
+            task_desc = row.get('task', 'No description provided.')
+            remarks = row.get('remarks', '') # Checks for a column titled "Remarks"
             
             st.markdown(f"""
                 <div class="task-card {prio_class}">
                     <div style="display: flex; justify-content: space-between; align-items: start;">
-                        <div>
-                            <span style="font-weight: bold; font-size: 1.1em;">{description}</span>
-                            <div style="margin-top:4px;">
+                        <div style="width: 80%;">
+                            <span style="font-weight: bold; font-size: 1.1em; color: #FFFFFF;">{task_desc}</span>
+                            {f'<div style="color: #BDC3C7; font-size: 0.9em; margin-top: 4px; font-style: italic;">↳ {remarks}</div>' if remarks else ''}
+                            <div style="margin-top:8px;">
                                 <span class="status-pill">{status_val}</span> • 
-                                <span style="font-size:0.8em; color:#FFA500;">{prio.upper()}</span>
+                                <span style="font-size:0.75em; color:#FFA500; font-weight: bold;">{prio.upper()}</span>
                             </div>
                         </div>
-                        <span style="background: #4F8BF9; color: white; padding: 2px 12px; border-radius: 20px; font-size: 0.8em;">
+                        <span style="background: #4F8BF9; color: white; padding: 2px 12px; border-radius: 20px; font-size: 0.8em; white-space: nowrap;">
                             {person}
                         </span>
                     </div>
