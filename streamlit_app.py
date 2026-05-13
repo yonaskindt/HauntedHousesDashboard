@@ -74,25 +74,27 @@ st.markdown("""
 
             //from here
 
-   @keyframes ticker {
+   /* The static window that hides the overflow */
+    .scroll-area { 
+        height: 60vh; 
+        overflow: hidden; 
+        position: relative;
+        background: rgba(0,0,0,0.2);
+        border-radius: 10px;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    @keyframes ticker {
         0% { transform: translateY(0); }
         100% { transform: translateY(-50%); }
     }
     .auto-scroll-content {
         position: absolute;
         width: 100%;
-        animation: ticker 40s linear infinite;
+        animation: ticker 30s linear infinite;
     }
     .auto-scroll-content:hover {
         animation-play-state: paused;
-    }
-    .scroll-area {
-        position: relative; 
-        height: 60vh; 
-        overflow: hidden; 
-        width: 100%;
-        background: rgba(0,0,0,0.2);
-        border-radius: 10px;
     }
     </style>
 """, unsafe_allow_html=True)
