@@ -73,33 +73,35 @@ st.markdown("""
     .header-right { flex: 1; text-align: right; border-left: 2px solid #FF4B4B; padding-left: 20px; }
 
             //from here
-    /* Internal scrolling area - Fixed height prevents pushing content down */
+
+   /* The static window that hides the overflow */
     .scroll-area { 
         height: 60vh; 
         overflow: hidden; 
         position: relative;
-        border: 1px solid rgba(255,255,255,0.05); /* Optional: visual boundary */
-        background: rgba(0,0,0,0.1);
+        background: rgba(0,0,0,0.2);
         border-radius: 10px;
+        border: 1px solid rgba(255,255,255,0.1);
     }
 
-    /* The animation container */
+    /* The moving container */
     .auto-scroll-content {
         position: absolute;
         width: 100%;
-        top: 0;
         left: 0;
-        animation: scroll-tasks 40s linear infinite;
+        top: 0;
+        /* Increase 30s for slower, 10s for faster */
+        animation: ticker 30s linear infinite;
     }
 
-    /* Pause on hover */
+    /* Pause when hovering */
     .auto-scroll-content:hover {
         animation-play-state: paused;
     }
 
-    @keyframes scroll-tasks {
-        0% { top: 0; }
-        100% { top: -100%; } /* Adjust this if the loop isn't seamless */
+    @keyframes ticker {
+        0% { transform: translateY(0); }
+        100% { transform: translateY(-50%); }
     }
             
     </style>
@@ -179,6 +181,8 @@ with col_left:
                     </div>
                 </div>
             """, unsafe_allow_html=True)
+
+            
     else:
         st.write("👻 No ghosts... and no tasks.")
     st.markdown('</div>', unsafe_allow_html=True)
