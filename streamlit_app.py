@@ -74,28 +74,34 @@ st.markdown("""
 
             //from here
 
-   /* The static window that hides the overflow */
-    .scroll-area { 
-        height: 60vh; 
-        overflow: hidden; 
+   /* The Cage: Keeps everything in place and prevents News from moving */
+    .task-container-fixed {
         position: relative;
-        background: rgba(0,0,0,0.2);
+        height: 60vh;
+        width: 100%;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.03);
         border-radius: 10px;
-        border: 1px solid rgba(255,255,255,0.1);
     }
 
-    @keyframes ticker {
-        0% { transform: translateY(0); }
-        100% { transform: translateY(-50%); }
-    }
-    .auto-scroll-content {
+    /* The Animation: Only moves the content inside the Cage */
+    .task-mover {
         position: absolute;
         width: 100%;
-        animation: ticker 30s linear infinite;
+        top: 0;
+        left: 0;
+        animation: slide-up 40s linear infinite;
     }
-    .auto-scroll-content:hover {
+
+    .task-mover:hover {
         animation-play-state: paused;
     }
+
+    @keyframes slide-up {
+        0% { top: 0; }
+        100% { top: -100%; }
+    }
+            
     </style>
 """, unsafe_allow_html=True)
 
@@ -132,51 +138,70 @@ with col_left:
     
     tasks_df = get_google_data(SHEET_ID, "Active Tasks")
     if not tasks_df.empty:
-        # Filter for non-completed tasks
+        # Filter out "Done" or "Completed"
         active_tasks = tasks_df[~tasks_df['status'].str.lower().isin(['done', 'completed'])]
         
-        # 1. Build the HTML for all cards first
-        items_list = []
+        # Build the HTML for all cards as one long string
+        all_cards_html = ""
         for _, row in active_tasks.iterrows():
             prio = str(row.get('priority level', '')).lower()
-            prio_class = "prio-high" if prio == "high" else "prio-medium" if prio == "medium" else ""
-            person = row.get('assigned to') or row.get('lead') or "Open"
-            task_desc = row.get('task', 'No description')
-            remarks_text = str(row.get('remarks', '')).strip() or "No remarks"
+            prio_css = "prio-high" if prio == "high" else "prio-medium" if prio == "medium" else ""
             
-            card_html = f"""
-                <div class="task-card {prio_class}">
-                    <div style="display: flex; justify-content: space-between; align-items: start;">
-                        <div style="width: 75%;">
-                            <span style="font-weight: bold; font-size: 1.1em; color: white;">{task_desc}</span>
-                            <div style="color: #BDC3C7; font-size: 0.85em; margin-top: 4px; font-style: italic;">↳ {remarks_text}</div>
-                            <div style="margin-top:8px;">
-                                <span class="status-pill">{row.get('status', 'Pending')}</span> • 
-                                <span style="font-size:0.7em; color:#FFA500; font-weight: bold;">{prio.upper()}</span>
-                            </div>
+            # Column mapping
+            task_name = row.get('task', 'Untitled')
+            remarks = str(row.get('remarks', '')).strip() or "No remarks"
+            person = row.get('assigned to') or row.get('lead') or "Open"
+            status = row.get('status', 'Pending')
+
+            all_cards_html += f"""
+            <div class="task-card {prio_css}" style="margin-bottom:10px;">
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <div style="flex: 1;">
+                        <div style="font-weight: bold; font-size: 1.1em; color: white;">{task_name}</div>
+                        <div style="color: #BDC3C7; font-size: 0.85em; margin-top: 4px; font-style: italic;">↳ {remarks}</div>
+                        <div style="margin-top:8px;">
+                            <span class="status-pill">{status}</span> • 
+                            <span style="font-size:0.7em; color:#FFA500; font-weight: bold;">{prio.upper()}</span>
                         </div>
-                        <span style="background: #4F8BF9; color: white; padding: 2px 10px; border-radius: 20px; font-size: 0.75em;">{person}</span>
                     </div>
+                    <div style="background: #4F8BF9; color: white; padding: 2px 10px; border-radius: 20px; font-size: 0.75em; margin-left: 10px;">{person}</div>
                 </div>
+            </div>
             """
-            items_list.append(card_html)
 
-        # Join the list into one big string
-        all_cards_html = "".join(items_list)
-
-        # 2. Render the "Cage" and double the content for the infinite loop
-        # We use a triple-quoted string here to prevent breaking the HTML
-        st.markdown(
-            f"""
-            <div class="scroll-area" style="position: relative; height: 60vh; overflow: hidden; width: 100%;">
-                <div class="auto-scroll-content">
+        # Wrap everything in the Cage and Mover
+        # We repeat all_cards_html twice to make the scrolling loop seamless
+        full_html_block = f"""
+        <div class="task-container-fixed">
+            <div class="task-mover">
+                {all_cards_html}
+                {all_cards_html}
+            </div>
+        </div>
+        """
+        
+        # CRITICAL: We use st.components.v1.html to isolate the scrolling
+        # This keeps the CSS animation from "infecting" the News section
+        import streamlit.components.v1 as components
+        components.html(f"""
+            <style>
+                .task-card {{ background: rgba(255, 255, 255, 0.08); padding: 12px; border-radius: 8px; border-left: 6px solid #4F8BF9; margin-bottom: 10px; font-family: sans-serif; }}
+                .prio-high {{ border-left-color: #FF4B4B; }}
+                .prio-medium {{ border-left-color: #FFA500; }}
+                .status-pill {{ background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; font-size: 0.8em; color: #eee; }}
+                {open(style_sheet_path).read() if 'style_sheet_path' in locals() else ""} 
+                /* Re-adding the scroll CSS inside the component */
+                .task-container-fixed {{ position: relative; height: 100%; overflow: hidden; }}
+                .task-mover {{ position: absolute; width: 100%; animation: slide-up 40s linear infinite; }}
+                @keyframes slide-up {{ 0% {{ top: 0; }} 100% {{ top: -100%; }} }}
+            </style>
+            <div class="task-container-fixed">
+                <div class="task-mover">
                     {all_cards_html}
                     {all_cards_html}
                 </div>
             </div>
-            """, 
-            unsafe_allow_html=True
-        )
+        """, height=500)
     else:
         st.write("👻 No tasks found.")
     #st.markdown('</div>', unsafe_allow_html=True)
