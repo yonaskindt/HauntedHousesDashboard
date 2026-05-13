@@ -139,9 +139,10 @@ with col_left:
     
     tasks_df = get_google_data(SHEET_ID, "Active Tasks")
     if not tasks_df.empty:
+        # Filter out done tasks
         active_tasks = tasks_df[~tasks_df['status'].str.lower().isin(['done', 'completed'])]
         
-        # We define the HTML for the list once
+        # Build the HTML for the list
         items_html = ""
         for _, row in active_tasks.iterrows():
             prio = str(row.get('priority level', '')).lower()
@@ -166,9 +167,9 @@ with col_left:
                 </div>
             """
 
-        # RENDER: Double the HTML inside the animated div for the loop
+        # THE CAGE: This forces the floating code to stay inside the box
         st.markdown(f"""
-            <div class="scroll-area">
+            <div class="scroll-area" style="position: relative; height: 60vh; overflow: hidden; width: 100%;">
                 <div class="auto-scroll-content">
                     {items_html}
                     {items_html}
