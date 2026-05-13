@@ -137,14 +137,13 @@ col_left, col_right = st.columns([1.8, 1])
 
 with col_left:
     st.subheader("📋 Active Tasks")
-    st.markdown('<div class="scroll-area">', unsafe_allow_html=True)
     
     tasks_df = get_google_data(SHEET_ID, "Active Tasks")
     if not tasks_df.empty:
         # Filter for non-completed tasks
         active_tasks = tasks_df[~tasks_df['status'].str.lower().isin(['done', 'completed', 'finished'])]
         
-        # We define the HTML for the list once
+        # 1. Build the HTML for the tasks list first
         items_html = ""
         for _, row in active_tasks.iterrows():
             prio = str(row.get('priority level', '')).lower()
@@ -152,7 +151,9 @@ with col_left:
             person = row.get('assigned to') or row.get('lead') or "Open"
             task_text = row.get('task', 'No description')
             remarks_text = str(row.get('remarks', '')).strip() or "No remarks"
+            status_val = row.get('status', 'Pending')
             
+            # Note: Keeping this all as one string block
             items_html += f"""
                 <div class="task-card {prio_class}">
                     <div style="display: flex; justify-content: space-between; align-items: start;">
@@ -160,28 +161,29 @@ with col_left:
                             <span style="font-weight: bold; font-size: 1.1em; color: white;">{task_text}</span>
                             <div style="color: #BDC3C7; font-size: 0.85em; margin-top: 4px; font-style: italic;">↳ {remarks_text}</div>
                             <div style="margin-top:8px;">
-                                <span class="status-pill">{row.get('status', 'Pending')}</span> • 
+                                <span class="status-pill">{status_val}</span> • 
                                 <span style="font-size:0.7em; color:#FFA500; font-weight: bold;">{prio.upper()}</span>
                             </div>
                         </div>
-                        <span style="background: #4F8BF9; color: white; padding: 2px 10px; border-radius: 20px; font-size: 0.75em;">{person}</span>
+                        <span style="background: #4F8BF9; color: white; padding: 2px 10px; border-radius: 20px; font-size: 0.75em; white-space: nowrap;">{person}</span>
                     </div>
                 </div>
             """
 
-        # RENDER: Double the HTML inside the animated div for the loop
-        st.markdown(f"""
-            <div class="scroll-area">
-                <div class="auto-scroll-content">
-                    {items_html}
-                    {items_html}
-                </div>
+        # 2. RENDER: The entire container in ONE markdown call
+        # The .replace('\n', '') ensures no markdown "helpful" formatting breaks the HTML
+        full_widget_html = f"""
+        <div class="scroll-area">
+            <div class="auto-scroll-content">
+                {items_html}
+                {items_html}
             </div>
-        """, unsafe_allow_html=True)
-
-            
+        </div>
+        """
+        
+        st.markdown(full_widget_html, unsafe_allow_html=True)
     else:
-        st.write("👻 No ghosts... and no tasks.")
+        st.write("👻 No tasks found.")
     #st.markdown('</div>', unsafe_allow_html=True)
 
 with col_right:
