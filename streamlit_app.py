@@ -135,7 +135,7 @@ col_left, col_right = st.columns([1.8, 1])
 
 with col_left:
     st.subheader("📋 Active Tasks")
-    st.markdown('<div class="scroll-area">', unsafe_allow_html=True)
+    st.markdown('<div class="scroll-scroll-content">', unsafe_allow_html=True)
     
     tasks_df = get_google_data(SHEET_ID, "Active Tasks")
     if not tasks_df.empty:
