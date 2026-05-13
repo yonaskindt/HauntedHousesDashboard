@@ -133,39 +133,46 @@ with col_left:
         # Filter for non-completed tasks
         active_tasks = tasks_df[~tasks_df['status'].str.lower().isin(['done', 'completed'])]
         
-        # Build the list of HTML cards
-        html_cards = []
+        # 1. Build the HTML for all cards first
+        items_list = []
         for _, row in active_tasks.iterrows():
             prio = str(row.get('priority level', '')).lower()
             prio_class = "prio-high" if prio == "high" else "prio-medium" if prio == "medium" else ""
             person = row.get('assigned to') or row.get('lead') or "Open"
             task_desc = row.get('task', 'No description')
-            remarks = str(row.get('remarks', '')).strip() or "No remarks"
+            remarks_text = str(row.get('remarks', '')).strip() or "No remarks"
             
-            card = f"""
-            <div class="task-card {prio_class}">
-                <div style="display: flex; justify-content: space-between; align-items: start;">
-                    <div style="width: 75%;">
-                        <span style="font-weight: bold; font-size: 1.1em; color: white;">{task_desc}</span>
-                        <div style="color: #BDC3C7; font-size: 0.85em; margin-top: 4px; font-style: italic;">↳ {remarks}</div>
-                        <div style="margin-top:8px;">
-                            <span class="status-pill">{row.get('status', 'Pending')}</span> • 
-                            <span style="font-size:0.7em; color:#FFA500; font-weight: bold;">{prio.upper()}</span>
+            card_html = f"""
+                <div class="task-card {prio_class}">
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <div style="width: 75%;">
+                            <span style="font-weight: bold; font-size: 1.1em; color: white;">{task_desc}</span>
+                            <div style="color: #BDC3C7; font-size: 0.85em; margin-top: 4px; font-style: italic;">↳ {remarks_text}</div>
+                            <div style="margin-top:8px;">
+                                <span class="status-pill">{row.get('status', 'Pending')}</span> • 
+                                <span style="font-size:0.7em; color:#FFA500; font-weight: bold;">{prio.upper()}</span>
+                            </div>
                         </div>
+                        <span style="background: #4F8BF9; color: white; padding: 2px 10px; border-radius: 20px; font-size: 0.75em;">{person}</span>
                     </div>
-                    <span style="background: #4F8BF9; color: white; padding: 2px 10px; border-radius: 20px; font-size: 0.75em;">{person}</span>
+                </div>
+            """
+            items_list.append(card_html)
+
+        # Join the list into one big string
+        all_cards_html = "".join(items_list)
+
+        # 2. Render the "Cage" and double the content for the infinite loop
+        # We use a triple-quoted string here to prevent breaking the HTML
+        st.markdown(
+            f"""
+            <div class="scroll-area" style="position: relative; height: 60vh; overflow: hidden; width: 100%;">
+                <div class="auto-scroll-content">
+                    {all_cards_html}
+                    {all_cards_html}
                 </div>
             </div>
-            """
-            html_cards.append(card)
-
-        # Join the cards and double them for the loop
-        all_cards = "".join(html_cards)
-        full_content = all_cards + all_cards
-
-        # RENDER BLOCK - DO NOT USE st.write()
-        st.markdown(
-            f'<div class="scroll-area"><div class="auto-scroll-content">{full_content}</div></div>', 
+            """, 
             unsafe_allow_html=True
         )
     else:
