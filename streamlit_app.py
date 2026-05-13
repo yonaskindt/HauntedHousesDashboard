@@ -139,23 +139,23 @@ with col_left:
     
     tasks_df = get_google_data(SHEET_ID, "Active Tasks")
     if not tasks_df.empty:
-        # Filter out done tasks
+        # Filter for non-completed tasks
         active_tasks = tasks_df[~tasks_df['status'].str.lower().isin(['done', 'completed'])]
         
-        # Build the HTML for the list
-        items_html = ""
+        # 1. Build the HTML for all cards first
+        items_list = []
         for _, row in active_tasks.iterrows():
             prio = str(row.get('priority level', '')).lower()
             prio_class = "prio-high" if prio == "high" else "prio-medium" if prio == "medium" else ""
             person = row.get('assigned to') or row.get('lead') or "Open"
-            task_text = row.get('task', 'No description')
+            task_desc = row.get('task', 'No description')
             remarks_text = str(row.get('remarks', '')).strip() or "No remarks"
             
-            items_html += f"""
+            card_html = f"""
                 <div class="task-card {prio_class}">
                     <div style="display: flex; justify-content: space-between; align-items: start;">
                         <div style="width: 75%;">
-                            <span style="font-weight: bold; font-size: 1.1em; color: white;">{task_text}</span>
+                            <span style="font-weight: bold; font-size: 1.1em; color: white;">{task_desc}</span>
                             <div style="color: #BDC3C7; font-size: 0.85em; margin-top: 4px; font-style: italic;">↳ {remarks_text}</div>
                             <div style="margin-top:8px;">
                                 <span class="status-pill">{row.get('status', 'Pending')}</span> • 
@@ -166,16 +166,24 @@ with col_left:
                     </div>
                 </div>
             """
+            items_list.append(card_html)
 
-        # THE CAGE: This forces the floating code to stay inside the box
-        st.markdown(f"""
+        # Join the list into one big string
+        all_cards_html = "".join(items_list)
+
+        # 2. Render the "Cage" and double the content for the infinite loop
+        # We use a triple-quoted string here to prevent breaking the HTML
+        st.markdown(
+            f"""
             <div class="scroll-area" style="position: relative; height: 60vh; overflow: hidden; width: 100%;">
                 <div class="auto-scroll-content">
-                    {items_html}
-                    {items_html}
+                    {all_cards_html}
+                    {all_cards_html}
                 </div>
             </div>
-        """, unsafe_allow_html=True)
+            """, 
+            unsafe_allow_html=True
+        )
     else:
         st.write("👻 No tasks found.")
     #st.markdown('</div>', unsafe_allow_html=True)
