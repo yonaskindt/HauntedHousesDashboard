@@ -26,8 +26,8 @@ def get_google_data(sheet_id, tab_name):
         return pd.DataFrame()
 
 # --- CONFIG ---
-SHEET_ID = "YOUR_SHEET_ID_HERE" 
-COMP_DATE = datetime(2026, 3, 15) 
+SHEET_ID = "1FuzDffAF4O1zinFsXgyHdvt9iSL91vutrosv_v727_U" 
+COMP_DATE = datetime(2027, 1, 10) 
 
 # --- STYLING ---
 st.markdown(f"""
@@ -87,7 +87,7 @@ st.markdown(f"""
         <div style="flex: 1;"><p style="color:#BDC3C7; margin:0;">{datetime.now().strftime("%A")}</p><b>{datetime.now().strftime("%d %B %Y")}</b></div>
         <div style="flex: 2; text-align: center;"><p class="title-text">🏰 Haunted House Dashboard</p></div>
         <div style="flex: 1; text-align: right; border-left: 2px solid #FF4B4B; padding-left: 20px;">
-            <p style="color:#BDC3C7; margin:0;">COMPETITION</p><b style="font-size: 1.5rem; color: #FF4B4B;">{max(0, days_left)} DAYS LEFT</b>
+            <p style="color:#BDC3C7; margin:0;">Kick-Off</p><b style="font-size: 1.5rem; color: #FF4B4B;">{max(0, days_left)} DAYS LEFT</b>
         </div>
     </div>
 """, unsafe_allow_html=True)
