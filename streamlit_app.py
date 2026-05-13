@@ -190,22 +190,42 @@ with col_right:
     for _, row in news_df.iterrows():
         st.markdown(f'<div class="news-card"><b>{row.get("headline")}</b><br><small>{row.get("content")}</small></div>', unsafe_allow_html=True)
     
-    st.markdown("### 🎂 Birthdays")
+    # 3. BIRTHDAYS SECTION
+    st.header("🎂 Birthdays")
     bdays_df = get_google_data(SHEET_ID, "Birthdays")
     found_bday = False
+    
     if not bdays_df.empty:
         for _, row in bdays_df.iterrows():
             try:
-                bdate = pd.to_datetime(row['date'], dayfirst=True).replace(year=now.year, hour=0, minute=0, second=0)
-                if bdate < now: bdate = bdate.replace(year=now.year + 1)
-                days_until = (bdate - now).days
+                # Force Euro formatting (Day-Month-Year)
+                bdate_raw = pd.to_datetime(row['date'], dayfirst=True)
+                # Strip time for pure date comparison
+                bdate_clean = bdate_raw.replace(year=now.year, hour=0, minute=0, second=0, microsecond=0)
+                
+                # If date already passed this year, look at next year
+                if bdate_clean < now:
+                    bdate_clean = bdate_clean.replace(year=now.year + 1)
+                
+                days_until = (bdate_clean - now).days
+                
+                # Logic: Today (0) through next 7 days
                 if 0 <= days_until <= 7:
-                    st.markdown(f'<div class="bday-card"><b>{row.get("name")}</b> ({bdate.strftime("%d %b")})</div>', unsafe_allow_html=True)
+                    status = "✨ TODAY!" if days_until == 0 else f"In {days_until} days"
+                    color = "#FFD700" if days_until == 0 else "#FF69B4"
+                    
+                    st.markdown(f"""
+                    <div class="bday-card" style="border-left: 5px solid {color};">
+                        <b style="font-size: 1.1em;">{row.get('name', 'Unknown')}</b><br>
+                        <span style="color: {color};">{status}</span> • {bdate_clean.strftime('%d %b')}
+                    </div>
+                    """, unsafe_allow_html=True)
                     found_bday = True
-            except: continue
-    
+            except Exception as e:
+                continue # Skip invalid date rows
+                
     if not found_bday:
-        st.markdown('<div style="opacity: 0.5; font-style: italic;">No birthdays this week.</div>', unsafe_allow_html=True)
+        st.write("No birthdays this week.")
     
     st.markdown('</div>', unsafe_allow_html=True)
 
