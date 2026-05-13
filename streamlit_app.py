@@ -144,43 +144,40 @@ with col_left:
         # Filter for non-completed tasks
         active_tasks = tasks_df[~tasks_df['status'].str.lower().isin(['done', 'completed', 'finished'])]
         
+        # We define the HTML for the list once
+        items_html = ""
         for _, row in active_tasks.iterrows():
-            # 1. Get Priority (mapping "Priority level" column)
             prio = str(row.get('priority level', '')).lower()
             prio_class = "prio-high" if prio == "high" else "prio-medium" if prio == "medium" else ""
-            
-            # 2. Get Status
-            status_val = row.get('status', 'Pending')
-            
-            # 3. Get Assigned Person
             person = row.get('assigned to') or row.get('lead') or "Open"
+            task_text = row.get('task', 'No description')
+            remarks_text = str(row.get('remarks', '')).strip() or "No remarks"
             
-            # 4. Get Task (Description)
-            task_desc = row.get('task', 'No description provided.')
-            
-            # 5. Get Remarks with fallback text
-            raw_remarks = str(row.get('remarks', '')).strip()
-            remarks_text = raw_remarks if raw_remarks else "No remarks"
-            
-            st.markdown(f"""
+            items_html += f"""
                 <div class="task-card {prio_class}">
                     <div style="display: flex; justify-content: space-between; align-items: start;">
-                        <div style="width: 80%;">
-                            <span style="font-weight: bold; font-size: 1.1em; color: #FFFFFF;">{task_desc}</span>
-                            <div style="color: #BDC3C7; font-size: 0.9em; margin-top: 4px; font-style: italic;">
-                                ↳ {remarks_text}
-                            </div>
+                        <div style="width: 75%;">
+                            <span style="font-weight: bold; font-size: 1.1em; color: white;">{task_text}</span>
+                            <div style="color: #BDC3C7; font-size: 0.85em; margin-top: 4px; font-style: italic;">↳ {remarks_text}</div>
                             <div style="margin-top:8px;">
-                                <span class="status-pill">{status_val}</span> • 
-                                <span style="font-size:0.75em; color:#FFA500; font-weight: bold;">{prio.upper()}</span>
+                                <span class="status-pill">{row.get('status', 'Pending')}</span> • 
+                                <span style="font-size:0.7em; color:#FFA500; font-weight: bold;">{prio.upper()}</span>
                             </div>
                         </div>
-                        <span style="background: #4F8BF9; color: white; padding: 2px 12px; border-radius: 20px; font-size: 0.8em; white-space: nowrap;">
-                            {person}
-                        </span>
+                        <span style="background: #4F8BF9; color: white; padding: 2px 10px; border-radius: 20px; font-size: 0.75em;">{person}</span>
                     </div>
                 </div>
-            """, unsafe_allow_html=True)
+            """
+
+        # RENDER: Double the HTML inside the animated div for the loop
+        st.markdown(f"""
+            <div class="scroll-area">
+                <div class="auto-scroll-content">
+                    {items_html}
+                    {items_html}
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
 
             
     else:
