@@ -182,7 +182,7 @@ with col_left:
             
     else:
         st.write("👻 No ghosts... and no tasks.")
-    st.markdown('</div>', unsafe_allow_html=True)
+    #st.markdown('</div>', unsafe_allow_html=True)
 
 with col_right:
     st.subheader("📢 News")
