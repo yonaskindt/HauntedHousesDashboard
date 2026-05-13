@@ -84,24 +84,17 @@ st.markdown("""
         border: 1px solid rgba(255,255,255,0.1);
     }
 
-    /* The moving container */
-    .auto-scroll-content {
-        position: absolute;
-        width: 100%;
-        left: 0;
-        top: 0;
-        /* Increase 30s for slower, 10s for faster */
-        animation: ticker 30s linear infinite;
-    }
-
-    /* Pause when hovering */
-    .auto-scroll-content:hover {
-        animation-play-state: paused;
-    }
-
     @keyframes ticker {
         0% { transform: translateY(0); }
         100% { transform: translateY(-50%); }
+    }
+    .auto-scroll-content {
+        position: absolute;
+        width: 100%;
+        animation: ticker 30s linear infinite;
+    }
+    .auto-scroll-content:hover {
+        animation-play-state: paused;
     }
     </style>
 """, unsafe_allow_html=True)
