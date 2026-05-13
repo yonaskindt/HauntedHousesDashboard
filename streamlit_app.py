@@ -141,9 +141,9 @@ with col_right:
                 found = True
         except: continue
     if not found: st.markdown('<i style="opacity:0.5;">No birthdays this week</i>', unsafe_allow_html=True)
+     
      #QUOTE OF THE DAY
-    st.subheader("Quote")
-   
+    st.subheader("🔮Quote")
     quotes_df = get_google_data(SHEET_ID, "Quotes")
     if not quotes_df.empty:
         q = quotes_df.sample(n=1).iloc[0]
