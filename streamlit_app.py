@@ -106,13 +106,13 @@ with col_left:
             prio = str(row.get('priority level', '')).lower()
             prio_c = "prio-high" if prio == "high" else "prio-medium" if prio == "medium" else ""
             person = row.get('assigned to') or "Open"
-            
+            #task cards
             cards_html += f"""
             <div class="task-card {prio_c}">
                 <div style="display:flex; justify-content:space-between; align-items:start;">
                     <div>
-                        <b style="font-size:1.1em; color:white;">{row.get('task', 'No Task')}</b>
-                        <div style="color:white; font-size:0.9em; margin-top:4px;">↳ {row.get('remarks') or "No remarks"}</div>
+                        <b style="font-size:1.5em; color:white;">{row.get('task', 'No Task')}</b>
+                        <div style="color:white; font-size:1.3em; margin-top:4px;">↳ {row.get('remarks') or "No remarks"}</div>
                     </div>
                     <div>
                         <div style="margin-top:8px;"><span class="status-pill">{row.get('status')}</span> </div>
@@ -120,8 +120,9 @@ with col_left:
                     </div>
                 </div>
             </div>"""
+            #end of task card
 
-        # RENDER WITH DOUBLE FOR LOOP
+        # double it for the loop
         st.markdown(f'<div class="task-window"><div class="scroller">{cards_html}{cards_html}</div></div>', unsafe_allow_html=True)
     else:
         st.write("No tasks found.")
