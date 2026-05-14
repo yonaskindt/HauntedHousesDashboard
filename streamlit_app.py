@@ -115,7 +115,7 @@ with col_left:
                         <div style="color:white; font-size:1.3em; margin-top:4px;">↳ {row.get('remarks') or "No remarks"}</div>
                     </div>
                     <div>
-                        <div style="margin-top:8px;"><span class="status-pill"; font-size:1.0em>{row.get('status')}</span> </div>
+                        <div style="margin-top:8px;"><span class="status-pill"; font-size:1.3em>{row.get('status')}</span> </div>
                         <span style="background:#4F8BF9; color:white; padding:2px 10px; border-radius:20px; font-size:0.8em;">{person}</span>
                     </div>
                 </div>
