@@ -112,9 +112,9 @@ with col_left:
                 <div style="display:flex; justify-content:space-between; align-items:start;">
                     <div>
                         <b style="font-size:1.1em; color:white;">{row.get('task', 'No Task')}</b>
-                        <div style="color:#BDC3C7; font-size:0.9em; margin-top:4px;">↳ {row.get('remarks') or "No remarks"}</div>
-                        <div style="margin-top:8px;"><span class="status-pill">{row.get('status')}</span> • <span style="color:#FFA500; font-size:0.8em; font-weight:bold;">{prio.upper()}</span></div>
                     </div>
+                    <div style="color:#BDC3C7; font-size:0.9em; margin-top:4px;">↳ {row.get('remarks') or "No remarks"}</div>
+                    <div style="margin-top:8px;"><span class="status-pill">{row.get('status')}</span> • <span style="color:#FFA500; font-size:0.8em; font-weight:bold;">{prio.upper()}</span></div>
                     <span style="background:#4F8BF9; color:white; padding:2px 10px; border-radius:20px; font-size:0.8em;">{person}</span>
                 </div>
             </div>"""
@@ -124,12 +124,15 @@ with col_left:
     else:
         st.write("No tasks found.")
 
+#what is shown in the right column
 with col_right:
+    #news section
     st.subheader("📢 News")
     n_df = get_google_data(SHEET_ID, "News")
     for _, row in n_df.iterrows():
         st.markdown(f'<div class="news-card"><b>{row.get("headline")}</b><br><small>{row.get("content")}</small></div>', unsafe_allow_html=True)
     
+    #birthday section
     st.subheader("🎂 Birthdays")
     b_df = get_google_data(SHEET_ID, "Birthdays")
     found = False
@@ -142,7 +145,7 @@ with col_right:
         except: continue
     if not found: st.markdown('<i style="opacity:0.5;">No birthdays this week</i>', unsafe_allow_html=True)
      
-     #QUOTE OF THE DAY
+     #quote section
     st.subheader("🔮Quote")
     quotes_df = get_google_data(SHEET_ID, "Quotes")
     if not quotes_df.empty:
