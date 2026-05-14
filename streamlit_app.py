@@ -114,9 +114,10 @@ with col_left:
                         <b style="font-size:1.1em; color:white;">{row.get('task', 'No Task')}</b>
                         <div style="color:white; font-size:0.9em; margin-top:4px;">↳ {row.get('remarks') or "No remarks"}</div>
                     </div>
-                    <div style="margin-top:8px;"><span class="status-pill">{row.get('status')}</span> 
+                    <div>
+                        <div style="margin-top:8px;"><span class="status-pill">{row.get('status')}</span> </div>
+                        <span style="background:#4F8BF9; color:white; padding:2px 10px; border-radius:20px; font-size:0.8em;">{person}</span>
                     </div>
-                    <span style="background:#4F8BF9; color:white; padding:2px 10px; border-radius:20px; font-size:0.8em;">{person}</span>
                 </div>
             </div>"""
 
