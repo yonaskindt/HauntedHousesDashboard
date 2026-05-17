@@ -92,7 +92,7 @@ st.markdown(f"""
         <div style="flex: 1;"><p style="color:#BDC3C7; margin:0;">{datetime.now().strftime("%A")}</p><b>{datetime.now().strftime("%d %B %Y")}</b></div>
         <div style="flex: 2; text-align: center; font-size:2rem"><p class="title-text">🏰 Haunted House Dashboard</p></div>
         <div style="flex: 1; text-align: right; border-left: 2px solid #FF4B4B; padding-left: 20px;">
-            <p style="color:#BDC3C7; margin:0; font-size: 1rem">Kick-Off</p><p style="font-size: 0.5rem; color: #FF4B4B; margin:0">FRC: {max(0, frc_days)} DAYS LEFT UNTIL {frc_important}</p><p style="font-size: 0.5rem; color: #FF4B4B;">FTC: {max(0, ftc_days)} DAYS LEFT UNTIL {ftc_important}</p>
+            <p style="color:#BDC3C7; margin:0; font-size: 1.5rem">Important upcoming dates</p><p style="font-size: 1rem; color: #FF4B4B; margin:0">FRC: {max(0, frc_days)} DAYS LEFT UNTIL {frc_important}</p><p style="font-size: 1rem; color: #FF4B4B;">FTC: {max(0, ftc_days)} DAYS LEFT UNTIL {ftc_important}</p>
         </div>
     </div>
 """, unsafe_allow_html=True)
