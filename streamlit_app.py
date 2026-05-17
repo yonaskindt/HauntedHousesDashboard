@@ -116,11 +116,11 @@ with col_left:
             <div class="task-card {prio_c}">
                 <div style="display:flex; justify-content:space-between; align-items:start;">
                     <div>
-                        <div style="margin-top:8px;"><span class="status-pill"; font-size:1.3em>{row.get('department')}</span> </div>
-                    </div>
-                    <div>
                         <b style="font-size:1.5em; color:white;">{row.get('task', 'No Task')}</b>
                         <div style="color:white; font-size:1.3em; margin-top:4px;">↳ {row.get('remarks') or "No remarks"}</div>
+                    </div>
+                    <div>
+                        <div style="margin-top:8px;"><span class="status-pill"; font-size:1.3em>{row.get('department')}</span> </div>
                     </div>
                     <div>
                         <div style="margin-top:8px;"><span class="status-pill"; font-size:1.3em>{row.get('status')}</span> </div>
