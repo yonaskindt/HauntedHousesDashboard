@@ -27,7 +27,8 @@ def get_google_data(sheet_id, tab_name):
 
 # --- CONFIG ---
 SHEET_ID = "1FuzDffAF4O1zinFsXgyHdvt9iSL91vutrosv_v727_U" 
-COMP_DATE = datetime(2027, 1, 10) 
+FRC_date = datetime(2027, 1, 12)
+FTC_date = datetime(2026, 9, 12) 
 
 # --- STYLING ---
 st.markdown(f"""
@@ -81,13 +82,15 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # --- HEADER ---
-days_left = (COMP_DATE - datetime.now()).days
+frc_days = (FRC_date - datetime.now()).days
+ftc_days = (FTC_date - datetime.now()).days
 st.markdown(f"""
     <div class="header-box">
         <div style="flex: 1;"><p style="color:#BDC3C7; margin:0;">{datetime.now().strftime("%A")}</p><b>{datetime.now().strftime("%d %B %Y")}</b></div>
         <div style="flex: 2; text-align: center;"><p class="title-text">🏰 Haunted House Dashboard</p></div>
         <div style="flex: 1; text-align: right; border-left: 2px solid #FF4B4B; padding-left: 20px;">
-            <p style="color:#BDC3C7; margin:0;">Kick-Off</p><b style="font-size: 1.5rem; color: #FF4B4B;">{max(0, days_left)} DAYS LEFT</b>
+            <p style="color:#BDC3C7; margin:0;">Kick-Off</p><b style="font-size: 1.5rem; color: #FF4B4B;">FRC: {max(0, frc_days)} DAYS LEFT</b>
+            <b style="font-size: 1.5rem; color: #FF4B4B;">FTC: {max(0, ftc_days)} DAYS LEFT</b>
         </div>
     </div>
 """, unsafe_allow_html=True)
