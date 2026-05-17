@@ -87,7 +87,7 @@ ftc_days = (FTC_date - datetime.now()).days
 st.markdown(f"""
     <div class="header-box">
         <div style="flex: 1;"><p style="color:#BDC3C7; margin:0;">{datetime.now().strftime("%A")}</p><b>{datetime.now().strftime("%d %B %Y")}</b></div>
-        <div style="flex: 2; text-align: center;"><p class="title-text">🏰 Haunted House Dashboard</p></div>
+        <div style="flex: 2; text-align: center; font-size:2rem"><p class="title-text">🏰 Haunted House Dashboard</p></div>
         <div style="flex: 1; text-align: right; border-left: 2px solid #FF4B4B; padding-left: 20px;">
             <p style="color:#BDC3C7; margin:0;">Kick-Off</p><p style="font-size: 1rem; color: #FF4B4B; margin:0">FRC: {max(0, frc_days)} DAYS LEFT</p><p style="font-size: 1rem; color: #FF4B4B;">FTC: {max(0, ftc_days)} DAYS LEFT</p>
         </div>
