@@ -116,7 +116,7 @@ with col_left:
             <div class="task-card {prio_c}">
                 <div style="display:flex; justify-content:space-between; align-items:start;">
                     <div>
-                        <b style="font-size:1.5em; color:white;">{row.get('departement', 'No Departement assigned')}</b>
+                        <b style="font-size:1.5em; color:white;">{row.get('Department', 'No Departement assigned')}</b>
                     </div>
                     <div>
                         <b style="font-size:1.5em; color:white;">{row.get('task', 'No Task')}</b>
