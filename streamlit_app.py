@@ -121,7 +121,7 @@ with col_left:
                     </div>
                     <div>
                         <div style="margin-top:8px;"><span class="status-pill"; font-size:1.8em>{row.get('status')}</span> </div>
-                        <span style="background:#4F8BF9; color:white; padding:2px 10px; border-radius:20px; font-size:1.8em;">{person}</span>
+                        <span style="background:#4F8BF9; color:white; padding:2px 10px; border-radius:20px; font-size:0.9em;">{person}</span>
                         <div><span class="status-pill"; font-size:1.8em>{row.get('department')}</span> </div>
                     </div>
                 </div>
