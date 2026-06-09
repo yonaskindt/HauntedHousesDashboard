@@ -77,7 +77,7 @@ st.markdown(f"""
     .prio-medium {{ border-left-color: #FFA500 !important; }}
     .status-pill {{ background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 5px; font-size: 0.75em; }}
     
-    .news-card {{ background: rgba(79, 139, 249, 0.1); padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #4F8BF9; font-size: 1em}}
+    .news-card {{ background: rgba(79, 139, 249, 0.1); padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #4F8BF9; font-size: 1.5em}}
     .bday-card {{ background: rgba(255, 105, 180, 0.1); padding: 10px; border-radius: 8px; border: 1px solid #FF69B4; margin-bottom: 8px; }}
     
     header, footer {{ visibility: hidden; }}
