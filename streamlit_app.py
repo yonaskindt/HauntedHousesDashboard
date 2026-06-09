@@ -105,7 +105,30 @@ with col_left:
     n_df = get_google_data(SHEET_ID, "News")
     for _, row in n_df.iterrows():
         st.markdown(f'<div class="news-card"><b>{row.get("headline")}</b><br><small>{row.get("content")}</small></div>', unsafe_allow_html=True)
-    
+    #birthday section
+    st.subheader("🎂 Birthdays")
+    b_df = get_google_data(SHEET_ID, "Birthdays")
+    found = False
+    for _, row in b_df.iterrows():
+        try:
+            bday = pd.to_datetime(row['date'], dayfirst=True).replace(year=datetime.now().year)
+            if 0 <= (bday - datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)).days <= 7:
+                st.markdown(f'<div class="bday-card"><b>{row.get("name")}</b> ({bday.strftime("%d %b")})</div>', unsafe_allow_html=True)
+                found = True
+        except: continue
+    if not found: st.markdown('<i style="opacity:0.5;">No birthdays this week</i>', unsafe_allow_html=True)
+     
+     #quote section
+    st.subheader("🔮Quote")
+    quotes_df = get_google_data(SHEET_ID, "Quotes")
+    if not quotes_df.empty:
+        q = quotes_df.sample(n=1).iloc[0]
+        st.markdown(f"""
+        <div class="quote-box">
+            <h2 style="color: #4F8BF9; margin: 0;">“{q.get('quote', 'Keep Pushing!')}”</h2>
+            <p style="color: #BDC3C7; margin-top: 10px;">— {q.get('author', 'Team')}</p>
+        </div>
+        """, unsafe_allow_html=True)
 
 #what is shown in the right column
 with col_right:
@@ -142,27 +165,4 @@ with col_right:
     else:
         st.write("No tasks found.")
     
-    #birthday section
-    st.subheader("🎂 Birthdays")
-    b_df = get_google_data(SHEET_ID, "Birthdays")
-    found = False
-    for _, row in b_df.iterrows():
-        try:
-            bday = pd.to_datetime(row['date'], dayfirst=True).replace(year=datetime.now().year)
-            if 0 <= (bday - datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)).days <= 7:
-                st.markdown(f'<div class="bday-card"><b>{row.get("name")}</b> ({bday.strftime("%d %b")})</div>', unsafe_allow_html=True)
-                found = True
-        except: continue
-    if not found: st.markdown('<i style="opacity:0.5;">No birthdays this week</i>', unsafe_allow_html=True)
-     
-     #quote section
-    st.subheader("🔮Quote")
-    quotes_df = get_google_data(SHEET_ID, "Quotes")
-    if not quotes_df.empty:
-        q = quotes_df.sample(n=1).iloc[0]
-        st.markdown(f"""
-        <div class="quote-box">
-            <h2 style="color: #4F8BF9; margin: 0;">“{q.get('quote', 'Keep Pushing!')}”</h2>
-            <p style="color: #BDC3C7; margin-top: 10px;">— {q.get('author', 'Team')}</p>
-        </div>
-        """, unsafe_allow_html=True)
+    
