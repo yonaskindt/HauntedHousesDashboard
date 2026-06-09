@@ -100,6 +100,15 @@ st.markdown(f"""
 col_left, col_right = st.columns([1.8, 1])
 
 with col_left:
+    #news section
+    st.subheader("📢 News")
+    n_df = get_google_data(SHEET_ID, "News")
+    for _, row in n_df.iterrows():
+        st.markdown(f'<div class="news-card"><b>{row.get("headline")}</b><br><small>{row.get("content")}</small></div>', unsafe_allow_html=True)
+    
+
+#what is shown in the right column
+with col_right:
     st.subheader("📋 Active Tasks")
     df = get_google_data(SHEET_ID, "Active Tasks")
     if not df.empty:
@@ -132,14 +141,6 @@ with col_left:
         st.markdown(f'<div class="task-window"><div class="scroller">{cards_html}{cards_html}</div></div>', unsafe_allow_html=True)
     else:
         st.write("No tasks found.")
-
-#what is shown in the right column
-with col_right:
-    #news section
-    st.subheader("📢 News")
-    n_df = get_google_data(SHEET_ID, "News")
-    for _, row in n_df.iterrows():
-        st.markdown(f'<div class="news-card"><b>{row.get("headline")}</b><br><small>{row.get("content")}</small></div>', unsafe_allow_html=True)
     
     #birthday section
     st.subheader("🎂 Birthdays")
